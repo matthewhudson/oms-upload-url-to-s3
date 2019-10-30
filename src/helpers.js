@@ -7,12 +7,13 @@ const {
   AWS_ACCESS_KEY_ID,
   AWS_S3_SECRET_KEY,
   AWS_S3_BUCKET_NAME,
-  AWS_S3_BUCKET_PREFIX
+  AWS_S3_BUCKET_PREFIX = 'oms/upload-url-to-s3'
 } = process.env
 
 class S3RemoteUploader {
-  constructor (url) {
+  constructor (url = '') {
     this.url = url
+    this.parsedUrl = new URL(this.url)
     this.stream = stream
     this.axios = axios
     this.AWS = AWS
@@ -21,9 +22,17 @@ class S3RemoteUploader {
       secretAccessKey: AWS_S3_SECRET_KEY
     })
     this.s3 = new this.AWS.S3()
-    this.fileName = filenamify(this.url, { replacement: '-' })
+    this.fileName = filenamify(
+      `${this.parsedUrl.hostname.replace(/\./g, '-')}-${
+        this.parsedUrl.pathname
+      }`,
+      {
+        replacement: '-'
+      }
+    )
+
     this.objKey = `${AWS_S3_BUCKET_PREFIX}/${this.fileName}`
-    this.contentType = 'application/octet-stream'
+    this.contentType = null // 'application/octet-stream'
     this.uploadStream()
   }
 
