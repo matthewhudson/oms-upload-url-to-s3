@@ -14,8 +14,10 @@ env:
 script:
 - npx oms build
 - |
-  output="$(npx oms run --silent upload -a url="https://bucket.hudson.dev/memes/neo-whoa.jpg" -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-  -e AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME
+  output="$(npx oms run --silent upload \
+  -a url="https://bucket.hudson.dev/memes/neo-whoa.jpg" \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -e AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME \
   -e AWS_S3_BUCKET_PREFIX=$AWS_S3_BUCKET_PREFIX | jq -c .)"
   if [ "$output" != '{"url":"https://s3.amazonaws.com/oms.hudson.dev/oms/upload-url-to-s3/bucket-hudson-dev-memes-neo-whoa.jpg","success":true}' ] ; then echo "$output"; exit 1; fi
