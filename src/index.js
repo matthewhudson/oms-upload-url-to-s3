@@ -3,14 +3,30 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const { actionHandler } = require('./actions')
 
 app.use(bodyParser.json())
 
 const port = process.env.PORT || 8080
 
-app.post('/message', (req, res) => {
-  const { name } = req.body
-  res.json({ message: `Hello ${name}` })
+const message = {
+  success: false
+}
+
+app.post('/upload', (req, res) => {
+  const { url } = req.body
+
+  actionHandler(url)
+    .then(url => {
+      message.success = true
+      message.url = url
+      res.json(message)
+    })
+    .catch(er => {
+      // @TODO: Log
+      message.error = `[500] ${er}`
+      res.status(500).json(message)
+    })
 })
 
 app.get('/health', (req, res) => res.send('OK'))
