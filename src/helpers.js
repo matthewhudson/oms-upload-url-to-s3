@@ -1,11 +1,11 @@
 const stream = require('stream')
 const axios = require('axios')
 const AWS = require('aws-sdk')
-const url = require('url')
+const filenamify = require('filenamify')
 
 class S3RemoteUploader {
-  constructor (remoteAddr) {
-    this.remoteAddr = remoteAddr
+  constructor (url) {
+    this.url = url
     this.stream = stream
     this.axios = axios
     this.AWS = AWS
@@ -14,9 +14,7 @@ class S3RemoteUploader {
       secretAccessKey: process.env.AWS_S3_SECRET_KEY
     })
     this.s3 = new this.AWS.S3()
-    this.fileName = url.parse(
-      this.remoteAddr.substring(this.remoteAddr.lastIndexOf('/') + 1)
-    ).pathname
+    this.fileName = filenamify(this.url, { replacement: '-' })
     this.objKey = `upload-url-to-s3/${this.fileName}`
     this.contentType = 'application/octet-stream'
     this.uploadStream()
@@ -38,7 +36,7 @@ class S3RemoteUploader {
   initiateAxiosCall () {
     return axios({
       method: 'get',
-      url: this.remoteAddr,
+      url: this.url,
       responseType: 'stream'
     })
   }

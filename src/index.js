@@ -19,8 +19,7 @@ app.post('/upload', (req, res) => {
   actionHandler(url)
     .then(url => {
       message.success = true
-      message.url = url
-      res.json(message)
+      res.json(Object.assign({}, url, message))
     })
     .catch(er => {
       // @TODO: Log
