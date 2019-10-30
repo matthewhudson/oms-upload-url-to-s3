@@ -48,3 +48,7 @@ environment:
     type: string
     required: true
     help: AWS S3 Bucket name
+  AWS_S3_BUCKET_PREFIX:
+    type: string
+    default: upload-url-to-s3
+    help: AWS S3 Bucket file prefix

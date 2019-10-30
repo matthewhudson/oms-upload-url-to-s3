@@ -3,6 +3,13 @@ const axios = require('axios')
 const AWS = require('aws-sdk')
 const filenamify = require('filenamify')
 
+const {
+  AWS_ACCESS_KEY_ID,
+  AWS_S3_SECRET_KEY,
+  AWS_S3_BUCKET_NAME,
+  AWS_S3_BUCKET_PREFIX
+} = process.env
+
 class S3RemoteUploader {
   constructor (url) {
     this.url = url
@@ -10,12 +17,12 @@ class S3RemoteUploader {
     this.axios = axios
     this.AWS = AWS
     this.AWS.config.update({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_S3_SECRET_KEY
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_S3_SECRET_KEY
     })
     this.s3 = new this.AWS.S3()
     this.fileName = filenamify(this.url, { replacement: '-' })
-    this.objKey = `upload-url-to-s3/${this.fileName}`
+    this.objKey = `${AWS_S3_BUCKET_PREFIX}/${this.fileName}`
     this.contentType = 'application/octet-stream'
     this.uploadStream()
   }
@@ -24,7 +31,7 @@ class S3RemoteUploader {
     const pass = new this.stream.PassThrough()
     this.promise = this.s3
       .upload({
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Bucket: AWS_S3_BUCKET_NAME,
         Key: this.objKey,
         Body: pass,
         ContentType: this.contentType
