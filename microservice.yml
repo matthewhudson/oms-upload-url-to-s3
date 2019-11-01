@@ -3,7 +3,7 @@ omg: 1
 info:
   version: 1.0.0
   title: oms-upload-url-to-s3
-  description: Open Microservice that uploads a URL to S3.
+  description: Proxy upload a remote URL's contents to S3.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -19,17 +19,16 @@ health:
 
 actions:
   upload:
-    help: Upload a file URL to S3.
+    help: Proxy upload a remote file to S3.
     http:
       path: /upload
       method: post
       port: 8080
     arguments:
       url:
-        help: A target url to upload to S3.
+        help: A target URL to upload to S3.
         type: string
         required: true
-        default: https://twitter.com/jackrusher/status/1170325794910027778
         in: requestBody
     output:
       contentType: application/json
