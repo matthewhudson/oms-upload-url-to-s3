@@ -30,7 +30,7 @@
     "stream": "0.0.2"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "3.0.2",
+    "cz-conventional-changelog": "3.3.0",
     "nodemon": "1.19.4",
     "standard": "14.3.1"
   },
